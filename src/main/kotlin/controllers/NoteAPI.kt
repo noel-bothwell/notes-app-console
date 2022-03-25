@@ -21,6 +21,10 @@ class NoteAPI {
         }
     }
 
+    fun firstNote() : Note {
+        return notes.first()
+    }
+
     fun listActiveNotes(): String {
         return if (numberOfActiveNotes() == 0) {
             "No active notes stored"
@@ -116,4 +120,6 @@ class NoteAPI {
     fun isValidListIndex(index: Int, list: List<Any>): Boolean {
         return (index >= 0 && index < list.size)
     }
+
+
 }
