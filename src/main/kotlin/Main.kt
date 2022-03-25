@@ -1,33 +1,17 @@
 import controllers.NoteAPI
 import models.Note
 import mu.KotlinLogging
-import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import java.lang.System.exit
 
 private val logger = KotlinLogging.logger {}
+
 private val noteAPI = NoteAPI()
 
 fun main(args: Array<String>) {
     runMenu()
 }
-fun mainMenu() : Int {
-    return ScannerInput.readNextInt(""" 
-         > ----------------------------------
-         > |        NOTE KEEPER APP         |
-         > ----------------------------------
-         > | NOTE MENU                      |
-         > |   1) Add a note                |
-         > |   2) List all notes            |
-         > |   3) Update a note             |
-         > |   4) Delete a note             |
-         > ----------------------------------
-         > |   0) Exit                      |
-         > ----------------------------------
-         > ==>> """.trimMargin(">"))
-}
-
 
 fun runMenu() {
     do {
@@ -41,6 +25,22 @@ fun runMenu() {
             else -> System.out.println("Invalid option entered: ${option}")
         }
     } while (true)
+}
+
+fun mainMenu() : Int {
+    return readNextInt(""" 
+         > ----------------------------------
+         > |        NOTE KEEPER APP         |
+         > ----------------------------------
+         > | NOTE MENU                      |
+         > |   1) Add a note                |
+         > |   2) List all notes            |
+         > |   3) Update a note             |
+         > |   4) Delete a note             |
+         > ----------------------------------
+         > |   0) Exit                      |
+         > ----------------------------------
+         > ==>> """.trimMargin(">"))
 }
 
 fun addNote(){
@@ -62,15 +62,16 @@ fun listNotes(){
     println(noteAPI.listAllNotes())
 }
 
+
 fun updateNote(){
-    logger.info { "updateNote() function invoked" }
+    logger.info { "updateNotes() function invoked" }
 }
 
 fun deleteNote(){
-    logger.info { "deleteNote() function invoked" }
+    logger.info { "deleteNotes() function invoked" }
 }
 
 fun exitApp(){
-    logger.info { "exitApp() function invoked" }
+    println("Exiting...bye")
     exit(0)
 }
