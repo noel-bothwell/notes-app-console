@@ -1,8 +1,14 @@
 package controllers
 
 import models.Note
+import persistence.Serializer
+import persistence.XMLSerializer
+import java.io.File
 
-class NoteAPI {
+class NoteAPI(serializerType: Serializer) {
+
+    private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
+
     private var notes = ArrayList<Note>()
 
     fun add(note: Note): Boolean {
@@ -146,5 +152,17 @@ class NoteAPI {
     fun isValidIndex(index: Int) :Boolean{
         return isValidListIndex(index, notes);
     }
+
+    @Throws(Exception::class)
+    fun load() {
+        notes = serializer.read() as ArrayList<Note>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(notes)
+    }
+
+
 
 }
