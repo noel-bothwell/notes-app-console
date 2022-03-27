@@ -2,13 +2,13 @@ package controllers
 
 import models.Note
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
+import persistence.JSONSerializer
 import persistence.XMLSerializer
 import java.io.File
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 
 class NoteAPITest {
 
@@ -65,6 +65,75 @@ class NoteAPITest {
             assertTrue(emptyNotes!!.add(newNote))
             assertEquals(1, emptyNotes!!.numberOfNotes())
             assertEquals(newNote, emptyNotes!!.findNote(emptyNotes!!.numberOfNotes() - 1))
+        }
+    }
+
+    @Nested
+    inner class UpdateNotes {
+        @Test
+        fun `updating a note that does not exist returns false`(){
+            assertFalse(populatedNotes!!.updateNote(6, Note("Updating Note", 2, "Work", false)))
+            assertFalse(populatedNotes!!.updateNote(-1, Note("Updating Note", 2, "Work", false)))
+            assertFalse(emptyNotes!!.updateNote(0, Note("Updating Note", 2, "Work", false)))
+        }
+
+        @Test
+        fun `updating a note that exists returns true and updates`() {
+            //check note 5 exists and check the contents
+            assertEquals(swim, populatedNotes!!.findNote(4))
+            assertEquals("Swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
+            assertEquals(3, populatedNotes!!.findNote(4)!!.notePriority)
+            assertEquals("Hobby", populatedNotes!!.findNote(4)!!.noteCategory)
+
+            //update note 5 with new information and ensure contents updated successfully
+            assertTrue(populatedNotes!!.updateNote(4, Note("Updating Note", 2, "College", false)))
+            assertEquals("Updating Note", populatedNotes!!.findNote(4)!!.noteTitle)
+            assertEquals(2, populatedNotes!!.findNote(4)!!.notePriority)
+            assertEquals("College", populatedNotes!!.findNote(4)!!.noteCategory)
+        }
+    }
+
+    @Nested
+    inner class DeleteNotes {
+
+        @Test
+        fun `deleting a Note that does not exist, returns null`() {
+            assertNull(emptyNotes!!.deleteNote(0))
+            assertNull(populatedNotes!!.deleteNote(-1))
+            assertNull(populatedNotes!!.deleteNote(5))
+        }
+
+        @Test
+        fun `deleting a note that exists delete and returns deleted object`() {
+            assertEquals(5, populatedNotes!!.numberOfNotes())
+            assertEquals(swim, populatedNotes!!.deleteNote(4))
+            assertEquals(4, populatedNotes!!.numberOfNotes())
+            assertEquals(learnKotlin, populatedNotes!!.deleteNote(0))
+            assertEquals(3, populatedNotes!!.numberOfNotes())
+        }
+
+    }
+
+    @Nested
+    inner class ArchiveNotes {
+        @Test
+        fun `archiving a note that does not exist returns false`(){
+            assertFalse(populatedNotes!!.archiveNote(6))
+            assertFalse(populatedNotes!!.archiveNote(-1))
+            assertFalse(emptyNotes!!.archiveNote(0))
+        }
+
+        @Test
+        fun `archiving an already archived note returns false`(){
+            assertTrue(populatedNotes!!.findNote(2)!!.isNoteArchived)
+            assertFalse(populatedNotes!!.archiveNote(2))
+        }
+
+        @Test
+        fun `archiving an active note that exists returns true and archives`() {
+            assertFalse(populatedNotes!!.findNote(1)!!.isNoteArchived)
+            assertTrue(populatedNotes!!.archiveNote(1))
+            assertTrue(populatedNotes!!.findNote(1)!!.isNoteArchived)
         }
     }
 
@@ -169,51 +238,6 @@ class NoteAPITest {
     }
 
     @Nested
-    inner class DeleteNotes {
-
-        @Test
-        fun `deleting a Note that does not exist, returns null`() {
-            assertNull(emptyNotes!!.deleteNote(0))
-            assertNull(populatedNotes!!.deleteNote(-1))
-            assertNull(populatedNotes!!.deleteNote(5))
-        }
-
-        @Test
-        fun `deleting a note that exists delete and returns deleted object`() {
-            assertEquals(5, populatedNotes!!.numberOfNotes())
-            assertEquals(swim, populatedNotes!!.deleteNote(4))
-            assertEquals(4, populatedNotes!!.numberOfNotes())
-            assertEquals(learnKotlin, populatedNotes!!.deleteNote(0))
-            assertEquals(3, populatedNotes!!.numberOfNotes())
-        }
-    }
-
-    @Nested
-    inner class UpdateNotes {
-        @Test
-        fun `updating a note that does not exist returns false`(){
-            assertFalse(populatedNotes!!.updateNote(6, Note("Updating Note", 2, "Work", false)))
-            assertFalse(populatedNotes!!.updateNote(-1, Note("Updating Note", 2, "Work", false)))
-            assertFalse(emptyNotes!!.updateNote(0, Note("Updating Note", 2, "Work", false)))
-        }
-
-        @Test
-        fun `updating a note that exists returns true and updates`() {
-            //check note 5 exists and check the contents
-            assertEquals(swim, populatedNotes!!.findNote(4))
-            assertEquals("Swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
-            assertEquals(3, populatedNotes!!.findNote(4)!!.notePriority)
-            assertEquals("Hobby", populatedNotes!!.findNote(4)!!.noteCategory)
-
-            //update note 5 with new information and ensure contents updated successfully
-            assertTrue(populatedNotes!!.updateNote(4, Note("Updating Note", 2, "College", false)))
-            assertEquals("Updating Note", populatedNotes!!.findNote(4)!!.noteTitle)
-            assertEquals(2, populatedNotes!!.findNote(4)!!.notePriority)
-            assertEquals("College", populatedNotes!!.findNote(4)!!.noteCategory)
-        }
-    }
-
-    @Nested
     inner class PersistenceTests {
 
         @Test
@@ -253,5 +277,44 @@ class NoteAPITest {
             assertEquals(storingNotes.findNote(1), loadedNotes.findNote(1))
             assertEquals(storingNotes.findNote(2), loadedNotes.findNote(2))
         }
+
+        @Test
+        fun `saving and loading an empty collection in JSON doesn't crash app`() {
+            // Saving an empty notes.json file.
+            val storingNotes = NoteAPI(JSONSerializer(File("notes.json")))
+            storingNotes.store()
+
+            //Loading the empty notes.json file into a new object
+            val loadedNotes = NoteAPI(JSONSerializer(File("notes.json")))
+            loadedNotes.load()
+
+            //Comparing the source of the notes (storingNotes) with the json loaded notes (loadedNotes)
+            assertEquals(0, storingNotes.numberOfNotes())
+            assertEquals(0, loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.numberOfNotes(), loadedNotes.numberOfNotes())
+        }
+
+        @Test
+        fun `saving and loading an loaded collection in JSON doesn't loose data`() {
+            // Storing 3 notes to the notes.json file.
+            val storingNotes = NoteAPI(JSONSerializer(File("notes.json")))
+            storingNotes.add(testApp!!)
+            storingNotes.add(swim!!)
+            storingNotes.add(summerHoliday!!)
+            storingNotes.store()
+
+            //Loading notes.json into a different collection
+            val loadedNotes = NoteAPI(JSONSerializer(File("notes.json")))
+            loadedNotes.load()
+
+            //Comparing the source of the notes (storingNotes) with the json loaded notes (loadedNotes)
+            assertEquals(3, storingNotes.numberOfNotes())
+            assertEquals(3, loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.numberOfNotes(), loadedNotes.numberOfNotes())
+            assertEquals(storingNotes.findNote(0), loadedNotes.findNote(0))
+            assertEquals(storingNotes.findNote(1), loadedNotes.findNote(1))
+            assertEquals(storingNotes.findNote(2), loadedNotes.findNote(2))
+        }
+
     }
 }
