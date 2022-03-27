@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="controllers.NoteAPITest$ListNotes" tests="9" skipped="0" failures="0" errors="0" timestamp="2022-03-25T14:00:47" hostname="LAPTOP-M11PNU4P" time="0.056">
+<testsuite name="controllers.NoteAPITest$ListNotes" tests="9" skipped="0" failures="0" errors="0" timestamp="2022-03-27T11:58:59" hostname="LAPTOP-M11PNU4P" time="0.107">
   <properties/>
-  <testcase name="listActiveNotes returns no active notes stored when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.013"/>
-  <testcase name="listNotesBySelectedPriority returns No Notes when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.001"/>
-  <testcase name="listAllNotes returns No Notes Stored message when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.001"/>
-  <testcase name="listActiveNotes returns active notes when ArrayList has active notes stored()" classname="controllers.NoteAPITest$ListNotes" time="0.004"/>
-  <testcase name="listArchivedNotes returns no archived notes when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.0"/>
-  <testcase name="listNotesBySelectedPriority returns all notes that match that priority when notes of that priority exist()" classname="controllers.NoteAPITest$ListNotes" time="0.027"/>
-  <testcase name="listNotesBySelectedPriority returns no notes when no notes of that priority exist()" classname="controllers.NoteAPITest$ListNotes" time="0.001"/>
+  <testcase name="listActiveNotes returns no active notes stored when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.019"/>
+  <testcase name="listNotesBySelectedPriority returns No Notes when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.002"/>
+  <testcase name="listAllNotes returns No Notes Stored message when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.002"/>
+  <testcase name="listActiveNotes returns active notes when ArrayList has active notes stored()" classname="controllers.NoteAPITest$ListNotes" time="0.006"/>
+  <testcase name="listArchivedNotes returns no archived notes when ArrayList is empty()" classname="controllers.NoteAPITest$ListNotes" time="0.002"/>
+  <testcase name="listNotesBySelectedPriority returns all notes that match that priority when notes of that priority exist()" classname="controllers.NoteAPITest$ListNotes" time="0.061"/>
+  <testcase name="listNotesBySelectedPriority returns no notes when no notes of that priority exist()" classname="controllers.NoteAPITest$ListNotes" time="0.002"/>
   <testcase name="listArchivedNotes returns archived notes when ArrayList has archived notes stored()" classname="controllers.NoteAPITest$ListNotes" time="0.001"/>
   <testcase name="listAllNotes returns Notes when ArrayList has notes stored()" classname="controllers.NoteAPITest$ListNotes" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
