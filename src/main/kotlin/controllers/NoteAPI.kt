@@ -3,7 +3,7 @@ package controllers
 import models.Note
 import persistence.Serializer
 
-class NoteAPI(serializerType: Serializer){
+class NoteAPI(serializerType: Serializer) {
 
     private var serializer: Serializer = serializerType
     private var notes = ArrayList<Note>()
@@ -52,36 +52,30 @@ class NoteAPI(serializerType: Serializer){
     //  LISTING METHODS
 
     fun listAllNotes(): String =
-        if  (notes.isEmpty()) "No notes stored"
-        else notes.joinToString (separator = "\n") { note ->
-            notes.indexOf(note).toString() + ": " + note.toString() }
-
-    fun listActiveNotes(): String {
-        return if (numberOfActiveNotes() == 0) {
-            "No active notes stored"
-        } else {
-            var listOfActiveNotes = ""
-            for (note in notes) {
-                if (!note.isNoteArchived) {
-                    listOfActiveNotes += "${notes.indexOf(note)}: $note \n"
-                }
-            }
-            listOfActiveNotes
+        if (notes.isEmpty()) "No notes stored"
+        else notes.joinToString(separator = "\n") { note ->
+            notes.indexOf(note).toString() + ": " + note.toString()
         }
-    }
 
-    fun listArchivedNotes(): String {
-        return if (numberOfArchivedNotes() == 0) {
-            "No archived notes stored"
-        } else {
-            var listOfArchivedNotes = ""
-            for (note in notes) {
-                if (note.isNoteArchived) {
-                    listOfArchivedNotes += "${notes.indexOf(note)}: $note \n"
+    fun listActiveNotes(): String =
+        if (numberOfActiveNotes() == 0) "No active notes stored"
+        else
+
+            notes.filter { note -> !note.isNoteArchived }
+                .joinToString(separator = "\n") { note ->
+                    notes.indexOf(note).toString() + ": " + note.toString()
+
                 }
-            }
-            listOfArchivedNotes
-        }
+
+
+    fun listArchivedNotes(): String =
+        if (numberOfArchivedNotes() == 0) "No archived notes stored"
+        else
+
+        notes.filter { note -> note.isNoteArchived}
+            .joinToString (separator = "\n") { note ->
+                notes.indexOf(note).toString() + ": " + note.toString()
+
     }
 
     fun listNotesBySelectedPriority(priority: Int): String {
