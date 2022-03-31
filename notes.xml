@@ -7,7 +7,7 @@
       <isNoteArchived>false</isNoteArchived>
     </models.Note>
     <models.Note>
-      <noteTitle>Swim - Pool</noteTitle>
+      <noteTitle>swim - Pool</noteTitle>
       <notePriority>3</notePriority>
       <noteCategory>Hobby</noteCategory>
       <isNoteArchived>true</isNoteArchived>

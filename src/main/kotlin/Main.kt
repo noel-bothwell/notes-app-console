@@ -170,9 +170,17 @@ fun archiveNote() {
     }
 }
 
+fun searchNotes() {
+    val searchTitle = readNextLine("Enter description to search: ")
+    val searchResults = noteAPI.searchByTitle(searchTitle).toString()
+    if (searchResults.isEmpty()) {
+        println("No notes were found")
+    } else {
+        println(searchResults)
+    }
+}
 
 
-// PERSISTENCE METHODS
 
 fun save() {
     try {

@@ -26,7 +26,7 @@ class NoteAPITest {
         summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false)
         codeApp = Note("Code App", 4, "Work", true)
         testApp = Note("Test App", 4, "Work", false)
-        swim = Note("Swim - Pool", 3, "Hobby", true)
+        swim = Note("swim - Pool", 3, "Hobby", true)
 
         //adding 5 Note to the notes api
         populatedNotes!!.add(learnKotlin!!)
@@ -81,7 +81,7 @@ class NoteAPITest {
         fun `updating a note that exists returns true and updates`() {
             //check note 5 exists and check the contents
             assertEquals(swim, populatedNotes!!.findNote(4))
-            assertEquals("Swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
+            assertEquals("swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
             assertEquals(3, populatedNotes!!.findNote(4)!!.notePriority)
             assertEquals("Hobby", populatedNotes!!.findNote(4)!!.noteCategory)
 
@@ -347,6 +347,46 @@ class NoteAPITest {
             assertEquals(1, populatedNotes!!.numberOfNotesByPriority(5))
             assertEquals(0, emptyNotes!!.numberOfNotesByPriority(1))
         }
+    }
+
+    @Nested
+    inner class SearchMethods {
+
+        @Test
+        fun `search notes by title returns no notes when no notes with title exist`() {
+            //Searching a populated collection for a title that doesn't exist.
+            assertEquals(5, populatedNotes!!.numberOfNotes())
+            val searchResults = populatedNotes!!.searchByTitle("no results expected").toString()
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            assertEquals(0, emptyNotes!!.numberOfNotes())
+            assertTrue(emptyNotes!!.searchByTitle("").toString().isEmpty())
+        }
+
+        @Test
+        fun `search notes by title return note when note with title exist`() {
+            assertEquals(5, populatedNotes!!.numberOfNotes())
+
+
+            var searchResults = populatedNotes!!.searchByTitle("Code App")
+
+            assertTrue(searchResults.contains("Code App"))
+            assertFalse(searchResults.contains("Test App"))
+
+            //Searching a populated collection for a partial title that exists (case matches)
+            searchResults = populatedNotes!!.searchByTitle("App").toString()
+            assertTrue(searchResults.contains("Code App"))
+            assertTrue(searchResults.contains("Test App"))
+            assertFalse(searchResults.contains("Gym"))
+
+            //Searching a populated collection for a partial title that exists (case doesn't match)
+            searchResults = populatedNotes!!.searchByTitle("App").toString()
+            assertTrue(searchResults.contains("Code App"))
+            assertTrue(searchResults.contains("Test App"))
+            assertFalse(searchResults.contains("Gym"))
+        }
+
     }
 
 
