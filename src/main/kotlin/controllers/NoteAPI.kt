@@ -9,7 +9,7 @@ class NoteAPI(serializerType: Serializer) {
     private var notes = ArrayList<Note>()
 
 
-    //  CRUD METHODS
+    //  crud methods
 
     fun add(note: Note): Boolean {
         return notes.add(note)
@@ -49,7 +49,7 @@ class NoteAPI(serializerType: Serializer) {
     }
 
 
-    //  LISTING METHODS
+    //  listing methods
 
     fun listAllNotes(): String =
         if (notes.isEmpty()) "No notes stored"
@@ -99,7 +99,7 @@ class NoteAPI(serializerType: Serializer) {
     }
 
 
-    //  COUNTING METHODS
+    //  counting methods
 
     fun numberOfNotes(): Int {
         return notes.size
@@ -124,7 +124,7 @@ class NoteAPI(serializerType: Serializer) {
     }
 
 
-    //  SEARCHING METHODS
+    //  searching methods
 
     fun findNote(index: Int): Note? {
         return if (isValidListIndex(index, notes)) {
@@ -136,16 +136,25 @@ class NoteAPI(serializerType: Serializer) {
         return isValidListIndex(index, notes);
     }
 
+    fun searchByTitle (searchString : String):String {
 
-    //  HELPER METHODS
+       return notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true) }
+            .joinToString(separator = "\n") { note ->
+                notes.indexOf(note).toString() + ": " + note.toString()
+            }
 
-    //utility method to determine if an index is valid in a list.
+    }
+
+
+    //  helper methods
+
+    //utility method to determine if an index is valid
     fun isValidListIndex(index: Int, list: List<Any>): Boolean {
         return (index >= 0 && index < list.size)
     }
 
 
-    //  PERSISTENCE METHODS
+    //  persistence methods
 
     @Throws(Exception::class)
     fun load() {
