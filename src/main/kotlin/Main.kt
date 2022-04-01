@@ -30,6 +30,7 @@ fun runMenu() {
             6 -> firstNote()
             7 -> listArchivedNotes()
             8 -> numberOfNotes()
+            9 -> searchNotes()
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -53,7 +54,9 @@ fun mainMenu(): Int {
          > |   6) List first note           |
          > |   7) List archived notes       |
          > |   8) number of notes           |
-         > ----------------------------------
+         > |--------------------------------|
+         > |   9) Search notes              |
+         > |--------------------------------|
          > |   20) Save notes               |
          > |   21) Load notes               |
          > |   0) Exit                      |

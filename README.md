@@ -13,3 +13,5 @@ Simple Note App used to create, delete, and update notes, made with kotlin. All 
 - Calculate and return the number of notes of a specific priority.
 - Archive Notes
 - List Submenu so the user can choose of they want to list all notes, active notes, or archived notes
+- category and priority validation
+- Search by title
