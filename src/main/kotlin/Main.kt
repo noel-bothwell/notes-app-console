@@ -2,8 +2,10 @@ import controllers.NoteAPI
 import models.Note
 import mu.KotlinLogging
 import persistence.JSONSerializer
+import utils.CategoryValidation.isValidCategory
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import utils.Validation.validRange
 import java.io.File
 import java.lang.System.exit
 
@@ -43,7 +45,7 @@ fun mainMenu(): Int {
          > |        NOTE KEEPER APP         |
          > ----------------------------------
          > | NOTE MENU                      |
-         > |   1) Add note                |
+         > |   1) Add note                  |
          > |   2) List notes                |
          > |   3) Update a note             |
          > |   4) Delete a note             |
@@ -63,8 +65,12 @@ fun mainMenu(): Int {
 fun addNote() {
     //logger.info { "addNote() function invoked" }
     val noteTitle = readNextLine("Enter a title for the note: ")
-    val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-    val noteCategory = readNextLine("Enter a category for the note: ")
+    var notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
+    if (!validRange(notePriority,1,5)){notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ") }
+
+    var noteCategory = readNextLine("Enter a category for the note: ")
+    if (!isValidCategory(noteCategory)){noteCategory = readNextLine("Enter a category for the note: ")}
+
     val isAdded = noteAPI.add(Note(noteTitle, notePriority, noteCategory, false))
 
     if (isAdded) {
@@ -125,8 +131,11 @@ fun updateNote() {
         val indexToUpdate = readNextInt("Enter the index of the note to update: ")
         if (noteAPI.isValidIndex(indexToUpdate)) {
             val noteTitle = readNextLine("Enter a title for the note: ")
-            val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-            val noteCategory = readNextLine("Enter a category for the note: ")
+            var notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
+            if (!validRange(notePriority,1,5)){notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ") }
+
+            var noteCategory = readNextLine("Enter a category for the note: ")
+            if (!isValidCategory(noteCategory)){noteCategory = readNextLine("Enter a category for the note: ")}
 
             //pass the index of the note and the new note details to NoteAPI for updating and check for success.
             if (noteAPI.updateNote(indexToUpdate, Note(noteTitle, notePriority, noteCategory, false))) {
